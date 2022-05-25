@@ -34,9 +34,15 @@
 		</div>
 	</main>
 
-	<footer class="fixed bottom-0 border-t w-full border-gray-600 border-dotted p-2">
+	<footer
+		class="flex align-middle fixed bottom-0 border-t w-full border-gray-600 border-dotted p-2 justify-between"
+	>
 		<p class="text-xs font-extralight">
 			Made with &#128151 by Innovation team and Personeelsvereniging
 		</p>
+
+		<a href="https://github.com/lorenzodonadio/borrel-game" target="_blank">
+			<img src="github_logo.png" alt="githublogo" class="h-4 w-4" />
+		</a>
 	</footer>
 </div>
