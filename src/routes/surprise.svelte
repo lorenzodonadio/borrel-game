@@ -1,5 +1,5 @@
-<div class="p-2 flex flex-col w-full h-[700px]">
-	<h3 class="text-center text-lg mb-2">
+<div class="p-2 flex flex-col w-full h-[550px]">
+	<h3 class="text-center text-lg mb-1 sm:mb-8">
 		Congratulations See you there! at 19:00 pm The first round is on us 🍺🍺
 	</h3>
 	<iframe
