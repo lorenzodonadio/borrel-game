@@ -35,7 +35,7 @@
 	</main>
 
 	<footer
-		class="flex align-middle fixed bottom-0 border-t w-full border-gray-600 border-dotted p-2 justify-between"
+		class="opacity-70 flex align-middle fixed bottom-0 border-t w-full border-gray-600 border-dotted p-2 justify-between"
 	>
 		<p class="text-xs font-extralight">
 			Made with &#128151 by Innovation team and Personeelsvereniging
