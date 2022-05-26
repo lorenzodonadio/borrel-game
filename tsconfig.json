@@ -16,5 +16,5 @@
 		"strict": true
 	},
 
-	"include": ["src/**/*.d.ts", "src/**/*.js", "src/**/*.svelte"]
+	"include": ["src/**/*.d.ts", "src/**/*.js", "src/**/*.svelte", "src/lib/supabase.ts"]
 }

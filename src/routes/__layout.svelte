@@ -1,11 +1,33 @@
-<script>
+<script lang="ts">
 	import '../app.css';
 	import { page } from '$app/stores';
+	import { user, createUser } from '$lib/stores/userStore';
+	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
+	import ModalTeam from '$lib/components/ModalTeam.svelte';
+
+	//const persistedUserId = persist(writable<number | undefined>(undefined), localStorage(), 'user');
+
+	/* console.log($user);
+	console.log($persistedUserId); */
+	let newUserName = '';
+	let showTeamModal = false;
+	console.log($user);
+
+	const handleContinue = async () => {
+		await createUser(newUserName);
+		showTeamModal = true;
+	};
 </script>
 
 <div
-	class="relative bg-gradient-to-tr from-indigo-300 via-deernsblue-200 to-pink-300 h-full min-h-screen font-k2d"
+	class:grad-lime={$user?.team === 'Lime Lions'}
+	class:grad-red={$user?.team === 'Red Rhinos'}
+	class:grad-blue={$user?.team === 'Blue Bats'}
+	class:grad-pink={$user?.team === 'Pink Pandas'}
+	class:grad-white={$user?.team === undefined}
+	class="relative bg-gradient-to-br h-full min-h-screen font-k2d"
 >
+	<!-- class="relative bg-gradient-to-tr from-indigo-200 to-pink-200 h-full min-h-screen font-k2d" -->
 	{#if $page.url.pathname !== '/'}
 		<a href="/" class="absolute top-4 sm:left-4 md:left-8">
 			<svg
@@ -28,14 +50,36 @@
 
 	<main>
 		<!-- This example requires Tailwind CSS v2.0+ -->
-		<div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-			<!-- Content goes here -->
-			<slot />
+		<div class="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8">
+			{#if $user}
+				<!-- Content goes here -->
+				<slot />
+			{:else}
+				<div class="p-8">
+					<label>
+						<span class="text-lg text-center font-semibold pb-4"
+							>Please enter your name, so we can play a game!</span
+						>
+						<input
+							bind:value={newUserName}
+							type="text"
+							name="name"
+							id="name"
+							class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 px-4 rounded-full"
+							placeholder="persistent user id here"
+						/>
+					</label>
+
+					<div class="flex justify-center mt-4">
+						<PrimaryButton on:buttonClick={handleContinue}>Continue</PrimaryButton>
+					</div>
+				</div>
+			{/if}
 		</div>
 	</main>
 
 	<footer
-		class="opacity-70 flex align-middle fixed bottom-0 border-t w-full border-gray-600 border-dotted p-2 justify-between"
+		class="fixed bottom-0 opacity-70 flex align-middle border-t w-full border-gray-600 border-dotted p-2 justify-between"
 	>
 		<p class="text-xs font-extralight">
 			Made with &#128151 by Innovation team and Personeelsvereniging
@@ -46,3 +90,25 @@
 		</a>
 	</footer>
 </div>
+
+{#if showTeamModal}
+	<ModalTeam on:closeModal={() => (showTeamModal = false)} />
+{/if}
+
+<style lang="postcss">
+	.grad-lime {
+		@apply from-lime-50 via-lime-100 to-lime-300;
+	}
+	.grad-red {
+		@apply from-red-50 via-red-100 to-red-200;
+	}
+	.grad-blue {
+		@apply from-blue-50 via-blue-100 to-blue-300;
+	}
+	.grad-pink {
+		@apply from-pink-50 via-pink-100 to-pink-300;
+	}
+	.grad-white {
+		@apply from-slate-50 via-slate-100 to-indigo-100;
+	}
+</style>
