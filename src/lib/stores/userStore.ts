@@ -18,6 +18,8 @@ export let user = persist(writable<MyUser | undefined>(undefined), localStorage(
 
 export const createUser = async (name: string) => {
 	const chosenTeam = teamNames[Math.floor(Math.random() * teamNames.length)];
-	const { data, error } = await supabase.from('users').insert([{ name: name, team: chosenTeam }]);
+	const { data, error } = await supabase
+		.from<MyUser>('users')
+		.insert([{ name: name, team: chosenTeam }]);
 	user.set(data[0]);
 };
