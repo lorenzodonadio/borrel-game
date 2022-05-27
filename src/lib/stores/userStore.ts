@@ -1,4 +1,5 @@
-import { persist, cookieStorage, localStorage } from '@macfja/svelte-persistent-store';
+//import { persist, cookieStorage, localStorage } from '@macfja/svelte-persistent-store';
+import { persist, cookieStorage } from '@macfja/svelte-persistent-store';
 import { supabase } from '$lib/supabase';
 import { writable } from 'svelte/store';
 
@@ -14,7 +15,7 @@ export type MyUser = {
 };
 
 //export let user = writable<MyUser | undefined>(undefined)
-export let user = persist(writable<MyUser | undefined>(undefined), localStorage(), 'user');
+export let user = persist(writable<MyUser | undefined>(undefined), cookieStorage(), 'user');
 
 const mySubscription = supabase
 	.from<MyUser>('users')
