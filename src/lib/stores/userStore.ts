@@ -4,7 +4,7 @@ import { writable } from 'svelte/store';
 
 const teamNames = ['Red Rhinos', 'Lime Lions', 'Pink Pandas', 'Blue Bats'] as const;
 export type TeamNames = typeof teamNames[number];
-type MyUser = {
+export type MyUser = {
 	id: number;
 	name: string;
 	team: TeamNames;
@@ -16,10 +16,19 @@ type MyUser = {
 //export let user = writable<MyUser | undefined>(undefined)
 export let user = persist(writable<MyUser | undefined>(undefined), localStorage(), 'user');
 
+const mySubscription = supabase
+	.from<MyUser>('users')
+	.on('*', (payload) => {
+		console.log('Change received!', payload);
+	})
+	.subscribe();
+
 export const createUser = async (name: string) => {
 	const chosenTeam = teamNames[Math.floor(Math.random() * teamNames.length)];
 	const { data, error } = await supabase
 		.from<MyUser>('users')
 		.insert([{ name: name, team: chosenTeam }]);
-	user.set(data[0]);
+	if (data) {
+		user.set(data[0]);
+	}
 };

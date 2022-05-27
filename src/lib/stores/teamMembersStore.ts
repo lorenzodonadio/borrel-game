@@ -1,6 +1,6 @@
 import { supabase } from '$lib/supabase';
 import { writable } from 'svelte/store';
-import type { TeamNames } from './userStore';
+import type { MyUser, TeamNames } from './userStore';
 
 export let teamMembers = writable<string[]>([]);
 
@@ -11,10 +11,11 @@ export const addTeamMember = async (
 	newTeamMember: string,
 	teamName: TeamNames | undefined
 ): Promise<string | false> => {
-	if (teamName === undefined) return;
-	let { data, error } = await supabase.from('users').select('name').eq('team', teamName);
+	if (teamName === undefined) return false;
+	let { data, error } = await supabase.from<MyUser>('users').select('name').eq('team', teamName);
 
 	console.log(data);
+	if (data === null) return false;
 
 	if (
 		arrayContains(

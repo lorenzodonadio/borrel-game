@@ -5,6 +5,7 @@
 	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
 	import { goto } from '$app/navigation';
 	import { fly } from 'svelte/transition';
+	import { cubicInOut } from 'svelte/easing';
 	let id = $page.params.id;
 	let answer = '';
 	let wrongAnswer = false;
@@ -22,12 +23,24 @@
 	};
 </script>
 
-<p>This is questions {id}</p>
+<p class="font-medium text-lg">Question {id}:</p>
 <p>{question.text}</p>
+
+{#if question.id === 1}
+	<div class="flex text-center">
+		<a
+			title="puzzle"
+			href="https://puzzel.org/en/jigsaw/play?p=-N34NafC91zYTWkjJO9A"
+			target="_blank"
+		>
+			<span class="text-blue-500 underline"> Solve this puzzle and enter the city name </span></a
+		>
+	</div>
+{/if}
 
 <div>
 	<label for="name" class="ml-px mt-4 pl-4 block font-medium text-gray-700">Your answer</label>
-	<div class="mt-1">
+	<div class="mt-1 px-4">
 		<input
 			bind:value={answer}
 			type="text"
@@ -38,13 +51,12 @@
 			class:text-red-500={wrongAnswer}
 			placeholder="answer here :)"
 		/>
+		{#if wrongAnswer}
+			<p transition:fly={{ x: 250, duration: 500, easing: cubicInOut }} class="text-red-500">
+				Wrong answer, please try again
+			</p>
+		{/if}
 	</div>
-
-	{#if wrongAnswer}
-		<p transition:fly={{ x: 100, duration: 250 }} class="text-red-500">
-			Wrong answer, please try again
-		</p>
-	{/if}
 </div>
 
 <div class="flex justify-center mt-4">
