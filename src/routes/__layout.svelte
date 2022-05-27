@@ -1,23 +1,34 @@
 <script lang="ts">
 	import '../app.css';
 	import { page } from '$app/stores';
-	import { user, createUser } from '$lib/stores/userStore';
-	import { persist, localStorage } from '@macfja/svelte-persistent-store';
+	import { user, createUser, loadUser } from '$lib/stores/userStore';
+	//import { persist, localStorage } from '@macfja/svelte-persistent-store';
 	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
 	import ModalTeam from '$lib/components/ModalTeam.svelte';
 
-	let persistUser = persist(user, localStorage(), 'user');
-	$: console.log({ $persistUser });
-	/* console.log($user);
-	console.log($persistedUserId); */
+	/* 	import { writable } from 'svelte/store';
+	import { onMount } from 'svelte';
+
+	export const persistentUserId = writable<string>(localStorage.getItem('userId') || '');
+
+	persistentUserId.subscribe((val) => localStorage.setItem('userId', val)); */
+
 	let newUserName = '';
 	let showTeamModal = false;
 	console.log($user);
 
 	const handleContinue = async () => {
 		await createUser(newUserName);
+		//$persistentUserId = `${$user?.id}`;
 		showTeamModal = true;
 	};
+
+	/* 	onMount(async () => {
+		if ($persistentUserId !== '') {
+			const foundUser = await loadUser($persistentUserId);
+			console.log({ foundUser });
+		}
+	}); */
 </script>
 
 <div
