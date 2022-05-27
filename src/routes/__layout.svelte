@@ -2,11 +2,12 @@
 	import '../app.css';
 	import { page } from '$app/stores';
 	import { user, createUser } from '$lib/stores/userStore';
+	import { persist, localStorage } from '@macfja/svelte-persistent-store';
 	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
 	import ModalTeam from '$lib/components/ModalTeam.svelte';
 
-	//const persistedUserId = persist(writable<number | undefined>(undefined), localStorage(), 'user');
-
+	let persistUser = persist(user, localStorage(), 'user');
+	$: console.log({ $persistUser });
 	/* console.log($user);
 	console.log($persistedUserId); */
 	let newUserName = '';
