@@ -13,31 +13,29 @@ export type MyUser = {
 	created_at: string;
 };
 
-/* export let user = writable<MyUser | undefined>(
-	JSON.parse(localStorage.getItem('user') ?? '') || undefined
-);
-
-user.subscribe((val) => localStorage.setItem('user', JSON.stringify(val))); */
 export let user = persist(writable<MyUser | undefined>(undefined), localStorage(), 'user');
 //export let user = writable<MyUser | undefined>(undefined);
 
-const mySubscription = supabase
+const insertSubscription = supabase
 	.from<MyUser>('users')
-	.on('*', (payload) => {
-		console.log('Change received!', payload);
+	.on('INSERT', (payload) => {
+		console.log('Insert received!', payload);
 	})
 	.subscribe();
 
-export const loadUser = async (userId: string): Promise<boolean> => {
-	const { data, error } = await supabase.from<MyUser>('users').select().eq('id', userId);
-	console.log('user loaded:', data);
-	if (data) {
-		user.set(data[0]);
-		return true;
-	}
-
-	return false;
-};
+const personalUpdateSubscription = supabase
+	.from<MyUser>('users')
+	.on('UPDATE', (payload) => {
+		console.log('Update received!', payload);
+		let isUpdateMine = false;
+		const unsub = user.subscribe((x) => {
+			if (x?.id === payload.new.id) isUpdateMine = true;
+		});
+		unsub();
+		console.log({ isUpdateMine });
+		if (isUpdateMine) user.set(payload.new);
+	})
+	.subscribe();
 
 export const createUser = async (name: string) => {
 	const chosenTeam = teamNames[Math.floor(Math.random() * teamNames.length)];
@@ -48,3 +46,28 @@ export const createUser = async (name: string) => {
 		user.set(data[0]);
 	}
 };
+
+export const showSurpriseForAll = async (teamName: TeamNames) => {
+	const { data, error } = await supabase
+		.from<MyUser>('users')
+		.update({ show_surprise: true })
+		.eq('team', teamName);
+};
+
+export const showQuestions = async (id: number) => {
+	const { data, error } = await supabase
+		.from<MyUser>('users')
+		.update({ show_questions: true })
+		.eq('id', id);
+};
+//not needed since we have a persistent user store
+/* export const loadUser = async (userId: string): Promise<boolean> => {
+		const { data, error } = await supabase.from<MyUser>('users').select().eq('id', userId);
+		console.log('user loaded:', data);
+		if (data) {
+			user.set(data[0]);
+			return true;
+		}
+	
+		return false;
+	}; */

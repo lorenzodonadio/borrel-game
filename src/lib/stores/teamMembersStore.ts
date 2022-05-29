@@ -1,11 +1,9 @@
 import { supabase } from '$lib/supabase';
 import { writable } from 'svelte/store';
+import { persist, localStorage } from '@macfja/svelte-persistent-store';
 import type { MyUser, TeamNames } from './userStore';
 
-export let teamMembers = writable<string[]>([]);
-
-const arrayContains = (arr: string[], lookup: string) =>
-	arr.some((x) => x.toLowerCase() == lookup.toLowerCase());
+export let teamMembers = persist(writable<string[]>([]), localStorage(), 'teamMembers');
 
 export const addTeamMember = async (
 	newTeamMember: string,
@@ -14,18 +12,15 @@ export const addTeamMember = async (
 	if (teamName === undefined) return false;
 	let { data, error } = await supabase.from<MyUser>('users').select('name').eq('team', teamName);
 
-	console.log(data);
+	//console.log(data);
 	if (data === null) return false;
 
-	if (
-		arrayContains(
-			data.map((x) => x.name),
-			newTeamMember
-		)
-	) {
-		teamMembers.update((t) => [...t, newTeamMember]);
-		console.log('Added user', newTeamMember);
-		return newTeamMember;
+	for (let m of data) {
+		if (m.name.toLowerCase() === newTeamMember.toLowerCase()) {
+			teamMembers.update((t) => [...t, m.name]);
+			//console.log('Added user', m.name);
+			return m.name;
+		}
 	}
 
 	return false;

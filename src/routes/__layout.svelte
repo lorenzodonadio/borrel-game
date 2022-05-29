@@ -1,21 +1,23 @@
 <script lang="ts">
 	import '../app.css';
+
 	import { page } from '$app/stores';
-	import { user, createUser, loadUser } from '$lib/stores/userStore';
-	//import { persist, localStorage } from '@macfja/svelte-persistent-store';
+	import { user, createUser, showSurpriseForAll, showQuestions } from '$lib/stores/userStore';
+	import { questions } from '$lib/stores/questionStore';
+	import { teamMembers } from '$lib/stores/teamMembersStore';
+	import { writable } from 'svelte/store';
+	import { persist, localStorage } from '@macfja/svelte-persistent-store';
+
 	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
 	import ModalTeam from '$lib/components/ModalTeam.svelte';
-
-	/* 	import { writable } from 'svelte/store';
-	import { onMount } from 'svelte';
-
-	export const persistentUserId = writable<string>(localStorage.getItem('userId') || '');
-
-	persistentUserId.subscribe((val) => localStorage.setItem('userId', val)); */
+	import ModalCongrats from '$lib/components/ModalCongrats.svelte';
 
 	let newUserName = '';
 	let showTeamModal = false;
+	let showCongratsModal = false;
 	console.log($user);
+
+	const congratsModalShown = persist(writable<boolean>(false), localStorage(), 'congratsmodal');
 
 	const handleContinue = async () => {
 		await createUser(newUserName);
@@ -23,12 +25,18 @@
 		showTeamModal = true;
 	};
 
-	/* 	onMount(async () => {
-		if ($persistentUserId !== '') {
-			const foundUser = await loadUser($persistentUserId);
-			console.log({ foundUser });
+	if ($user) {
+		if ($questions.map((x) => x.is_correct).every(Boolean)) {
+			showCongratsModal = true;
+			$user.show_surprise = true;
+			showSurpriseForAll($user.team);
 		}
-	}); */
+
+		if ($teamMembers.length >= 2) {
+			$user.show_questions = true;
+			showQuestions($user.id);
+		}
+	}
 </script>
 
 <div
@@ -44,7 +52,7 @@
 		<a href="/" class="absolute top-4 sm:left-4 md:left-8">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
-				class="ml-1 h-5 w-5 my-auto text-deernsblue"
+				class="ml-2 h-6 w-6 my-auto text-deernsblue"
 				viewBox="0 0 20 20"
 				fill="currentColor"
 			>
@@ -105,6 +113,15 @@
 
 {#if showTeamModal}
 	<ModalTeam on:closeModal={() => (showTeamModal = false)} />
+{/if}
+
+{#if showCongratsModal && !$congratsModalShown}
+	<ModalCongrats
+		on:closeModal={() => {
+			showCongratsModal = false;
+			$congratsModalShown = true;
+		}}
+	/>
 {/if}
 
 <style lang="postcss">
