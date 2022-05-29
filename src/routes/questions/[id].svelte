@@ -52,27 +52,29 @@
 		<h3 for="name" class="mt-4 block font-medium text-gray-700">Correct answer:</h3>
 		<p>{question.answer}</p>
 	{:else}
-		<label for="name" class="mt-4 block font-medium text-gray-700">Your answer</label>
-		<div class="mt-1 px-4">
-			<input
-				bind:value={answer}
-				type="text"
-				name="name"
-				id="name"
-				class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full border-gray-300 px-4 rounded-full"
-				class:border-red-500={wrongAnswer}
-				class:text-red-500={wrongAnswer}
-				placeholder="answer here :)"
-			/>
-			{#if wrongAnswer}
-				<p transition:fly={{ x: 250, duration: 500, easing: cubicInOut }} class="text-red-500">
-					Wrong answer, please try again
-				</p>
-			{/if}
-		</div>
+		<form on:submit|preventDefault={handleAnswer}>
+			<label for="name" class="mt-4 block font-medium text-gray-700">Your answer</label>
+			<div class="mt-1 px-4">
+				<input
+					bind:value={answer}
+					type="text"
+					name="name"
+					id="name"
+					class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full border-gray-300 px-4 rounded-full"
+					class:border-red-500={wrongAnswer}
+					class:text-red-500={wrongAnswer}
+					placeholder="answer here :)"
+				/>
+				{#if wrongAnswer}
+					<p transition:fly={{ x: 250, duration: 500, easing: cubicInOut }} class="text-red-500">
+						Wrong answer, please try again
+					</p>
+				{/if}
+			</div>
 
-		<div class="flex justify-center mt-4">
-			<PrimaryButton disabled={!answer} on:buttonClick={handleAnswer}>Submit answer</PrimaryButton>
-		</div>
+			<div class="flex justify-center mt-4">
+				<PrimaryButton disabled={!answer}>Submit answer</PrimaryButton>
+			</div>
+		</form>
 	{/if}
 </div>

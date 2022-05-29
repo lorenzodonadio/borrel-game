@@ -65,8 +65,11 @@
 					<li>{member}</li>
 				{/each}
 			</ul>
-			<p class="font-medium text-lg">Find and enter the name of your team mates:</p>
-			<div class="flex justify-between space-x-2 p-2">
+			<p class="font-medium text-lg">Find and add your teammates:</p>
+			<form
+				class="flex justify-between space-x-2 p-2"
+				on:submit|preventDefault={handleAddTeamMember}
+			>
 				<input
 					bind:value={newTeamMember}
 					type="text"
@@ -79,7 +82,6 @@
 				/>
 
 				<button
-					on:click={handleAddTeamMember}
 					type="button"
 					class="h-7 w-7 my-auto inline-flex items-center p-1 border border-transparent rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
 				>
@@ -98,7 +100,8 @@
 						/>
 					</svg>
 				</button>
-			</div>
+			</form>
+
 			{#if wrongAnswer}
 				<p transition:fly={{ x: 250, duration: 500, easing: cubicInOut }} class="text-red-500">
 					{wrongMessage}
