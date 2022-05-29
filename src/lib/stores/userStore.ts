@@ -16,23 +16,23 @@ export type MyUser = {
 export let user = persist(writable<MyUser | undefined>(undefined), localStorage(), 'user');
 //export let user = writable<MyUser | undefined>(undefined);
 
-const insertSubscription = supabase
+/* const insertSubscription = supabase
 	.from<MyUser>('users')
 	.on('INSERT', (payload) => {
-		console.log('Insert received!', payload);
+		//console.log('Insert received!', payload);
 	})
-	.subscribe();
+	.subscribe(); */
 
 const personalUpdateSubscription = supabase
 	.from<MyUser>('users')
 	.on('UPDATE', (payload) => {
-		console.log('Update received!', payload);
+		//console.log('Update received!', payload);
 		let isUpdateMine = false;
 		const unsub = user.subscribe((x) => {
 			if (x?.id === payload.new.id) isUpdateMine = true;
 		});
 		unsub();
-		console.log({ isUpdateMine });
+		//console.log({ isUpdateMine });
 		if (isUpdateMine) user.set(payload.new);
 	})
 	.subscribe();
@@ -47,14 +47,18 @@ export const createUser = async (name: string) => {
 	}
 };
 
-export const showSurpriseForAll = async (teamName: TeamNames) => {
+export const showSurpriseForAll = async (teamName: TeamNames | undefined) => {
+	if (teamName === undefined) return;
+
 	const { data, error } = await supabase
 		.from<MyUser>('users')
 		.update({ show_surprise: true })
 		.eq('team', teamName);
 };
 
-export const showQuestions = async (id: number) => {
+export const showQuestions = async (id: number | undefined) => {
+	if (id === undefined) return;
+
 	const { data, error } = await supabase
 		.from<MyUser>('users')
 		.update({ show_questions: true })

@@ -2,9 +2,8 @@
 	import '../app.css';
 
 	import { page } from '$app/stores';
-	import { user, createUser, showSurpriseForAll, showQuestions } from '$lib/stores/userStore';
+	import { user, createUser } from '$lib/stores/userStore';
 	import { questions } from '$lib/stores/questionStore';
-	import { teamMembers } from '$lib/stores/teamMembersStore';
 	import { writable } from 'svelte/store';
 	import { persist, localStorage } from '@macfja/svelte-persistent-store';
 
@@ -15,7 +14,7 @@
 	let newUserName = '';
 	let showTeamModal = false;
 	let showCongratsModal = false;
-	console.log($user);
+	//console.log($user);
 
 	const congratsModalShown = persist(writable<boolean>(false), localStorage(), 'congratsmodal');
 
@@ -25,17 +24,9 @@
 		showTeamModal = true;
 	};
 
-	if ($user) {
-		if ($questions.map((x) => x.is_correct).every(Boolean)) {
-			showCongratsModal = true;
-			$user.show_surprise = true;
-			showSurpriseForAll($user.team);
-		}
-
-		if ($teamMembers.length >= 2) {
-			$user.show_questions = true;
-			showQuestions($user.id);
-		}
+	$: if ($questions.map((x) => x.is_correct).every(Boolean)) {
+		showCongratsModal = true;
+		//$user.show_surprise = true;
 	}
 </script>
 

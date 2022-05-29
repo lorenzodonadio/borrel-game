@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition';
-	import { user } from '$lib/stores/userStore';
+	import { user, showQuestions } from '$lib/stores/userStore';
 	import { teamMembers, addTeamMember } from '$lib/stores/teamMembersStore';
 	import { cubicInOut } from 'svelte/easing';
 
@@ -33,7 +33,11 @@
 		if (await addTeamMember(newTeamMember, $user?.team)) {
 			newTeamMember = '';
 
-			console.log({ $teamMembers });
+			//console.log({ $teamMembers });
+			if ($teamMembers.length >= 2) {
+				//$user.show_questions = true;
+				showQuestions($user?.id);
+			}
 		} else {
 			wrongMessage = 'Teammate not found try again :)';
 			helperForWrongAnswer();

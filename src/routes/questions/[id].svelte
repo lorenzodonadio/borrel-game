@@ -5,6 +5,8 @@
 	import { cubicInOut } from 'svelte/easing';
 	//store imports
 	import { questions } from '$lib/stores/questionStore';
+	import { user, showSurpriseForAll } from '$lib/stores/userStore';
+
 	// component imports
 	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
 
@@ -14,10 +16,14 @@
 
 	$: question = $questions.filter((q) => q.id === id)[0];
 
-	const handleAnswer = () => {
+	const handleAnswer = async () => {
 		if (answer.toLocaleLowerCase() === question.answer.toLocaleLowerCase()) {
 			$questions = $questions.map((x) => (x.id === id ? { ...x, is_correct: true } : x));
-			console.log('Correct Answer');
+			//console.log('Correct Answer');
+			//check if all questions are correct, if so set it for every teammate!
+			if ($questions.map((x) => x.is_correct).every(Boolean)) {
+				await showSurpriseForAll($user?.team);
+			}
 			goto('/');
 		} else {
 			wrongAnswer = true;
