@@ -14,6 +14,7 @@ export type MyUser = {
 };
 
 export let user = persist(writable<MyUser | undefined>(undefined), localStorage(), 'user');
+export let allUsers = writable<MyUser[] | undefined>(undefined);
 //export let user = writable<MyUser | undefined>(undefined);
 
 /* const insertSubscription = supabase
@@ -44,6 +45,13 @@ export const createUser = async (name: string) => {
 		.insert([{ name: name, team: chosenTeam }]);
 	if (data) {
 		user.set(data[0]);
+	}
+};
+
+export const loadAllUsers = async () => {
+	const { data, error } = await supabase.from<MyUser>('users').select('*');
+	if (data) {
+		allUsers.set(data);
 	}
 };
 

@@ -13,8 +13,10 @@
 	let id = parseInt($page.params.id);
 	let answer = '';
 	let wrongAnswer = false;
-
+	$: isQ4Correct = $questions.filter((q) => q.id === 4).map((x) => x.is_correct)[0];
 	$: question = $questions.filter((q) => q.id === id)[0];
+
+	console.log({ isQ4Correct });
 
 	const handleAnswer = async () => {
 		if (answer.toLocaleLowerCase() === question.answer.toLocaleLowerCase()) {
@@ -36,16 +38,46 @@
 	<p class="font-medium text-lg">Question {id}:</p>
 	<p>{question.text}</p>
 
-	{#if question.id === 1}
+	{#if question.id === 2}
+		<img class="flex-1" src="/rebus.png" alt="redus puzzle" />
+	{/if}
+	{#if question.id === 3}
 		<div class="flex text-center">
 			<a
 				title="puzzle"
-				href="https://puzzel.org/en/jigsaw/play?p=-N34NafC91zYTWkjJO9A"
+				href="https://puzzel.org/en/acrostic/play?p=-N34RM6kk05nRiFdYQ9L"
 				target="_blank"
 			>
-				<span class="text-blue-500 underline"> Solve this puzzle and enter the city name </span></a
+				<span class="text-blue-500 underline"> Solve this acrostic and enter the answer</span></a
 			>
 		</div>
+	{/if}
+
+	{#if question.id === 4}
+		<a
+			title="puzzle"
+			href="https://puzzel.org/en/jigsaw/play?p=-N4S8_AhkoxWRdik6nbD"
+			target="_blank"
+		>
+			<span class="text-blue-500 underline">
+				Solve this puzzle and enter the name of this place</span
+			></a
+		>
+	{/if}
+	{#if question.id === 5}
+		{#if isQ4Correct}
+			<div class="grid grid-cols-1 sm:grid-cols-2 justify-evenly">
+				<img class="h-[300px] w-[400px] flex-1" src="/plein.png" alt="findtheplace" />
+
+				<iframe
+					class="h-[300px] w-[381px] sm:h-[300px] sm:w-[400px]"
+					title="plein"
+					src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1225.9966344210407!2d4.31510201481392!3d52.079852399999986!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c5b7aa3efae4c7%3A0x744199ac4add028f!2sHet%20Plein!5e0!3m2!1sen!2snl!4v1655128506390!5m2!1sen!2snl"
+					style="border:0;"
+					loading="lazy"
+				/>
+			</div>
+		{/if}
 	{/if}
 
 	{#if question.is_correct}
@@ -73,7 +105,7 @@
 			</div>
 
 			<div class="flex justify-center mt-4">
-				<PrimaryButton disabled={!answer}>Submit answer</PrimaryButton>
+				<PrimaryButton on:click={handleAnswer} disabled={!answer}>Submit answer</PrimaryButton>
 			</div>
 		</form>
 	{/if}

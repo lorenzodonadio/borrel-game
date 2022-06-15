@@ -1,11 +1,9 @@
 <script>
-	import { createEventDispatcher } from 'svelte/internal';
 	export let disabled = false;
-	const dispatch = createEventDispatcher();
 </script>
 
 <button
-	on:click={() => dispatch('buttonClick')}
+	on:click
 	{disabled}
 	type="button"
 	class:bg-gray-300={disabled}

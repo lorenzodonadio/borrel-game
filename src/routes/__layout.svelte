@@ -2,7 +2,7 @@
 	import '../app.css';
 
 	import { page } from '$app/stores';
-	import { user, createUser } from '$lib/stores/userStore';
+	import { user, createUser, allUsers, loadAllUsers } from '$lib/stores/userStore';
 	import { questions } from '$lib/stores/questionStore';
 	import { writable } from 'svelte/store';
 	import { persist, localStorage } from '@macfja/svelte-persistent-store';
@@ -10,10 +10,12 @@
 	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
 	import ModalTeam from '$lib/components/ModalTeam.svelte';
 	import ModalCongrats from '$lib/components/ModalCongrats.svelte';
+	import { onMount } from 'svelte';
 
 	let newUserName = '';
 	let showTeamModal = false;
 	let showCongratsModal = false;
+	let loaded = false;
 	//console.log($user);
 
 	const congratsModalShown = persist(writable<boolean>(false), localStorage(), 'congratsmodal');
@@ -28,6 +30,12 @@
 		showCongratsModal = true;
 		//$user.show_surprise = true;
 	}
+
+	onMount(async () => {
+		await loadAllUsers();
+		console.log($allUsers);
+		loaded = true;
+	});
 </script>
 
 <div
@@ -62,29 +70,33 @@
 	<main>
 		<!-- This example requires Tailwind CSS v2.0+ -->
 		<div class="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8">
-			{#if $user}
-				<!-- Content goes here -->
-				<slot />
-			{:else}
-				<div class="p-8">
-					<label>
-						<span class="text-lg text-center font-semibold pb-4"
-							>Please enter your name, so we can play a game!</span
-						>
-						<input
-							bind:value={newUserName}
-							type="text"
-							name="name"
-							id="name"
-							class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 px-4 rounded-full"
-							placeholder="persistent user id here"
-						/>
-					</label>
+			{#if loaded}
+				{#if $user}
+					<!-- Content goes here -->
+					<slot />
+				{:else}
+					<div class="p-8">
+						<form on:submit|preventDefault={handleContinue}>
+							<label>
+								<span class="text-lg text-center font-semibold pb-4"
+									>Please enter your name, so we can play a game!</span
+								>
+								<input
+									bind:value={newUserName}
+									type="text"
+									name="name"
+									id="name"
+									class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 px-4 rounded-full"
+									placeholder="user name"
+								/>
+							</label>
 
-					<div class="flex justify-center mt-4">
-						<PrimaryButton on:buttonClick={handleContinue}>Continue</PrimaryButton>
+							<div class="flex justify-center mt-4">
+								<PrimaryButton>Continue</PrimaryButton>
+							</div>
+						</form>
 					</div>
-				</div>
+				{/if}
 			{/if}
 		</div>
 	</main>
