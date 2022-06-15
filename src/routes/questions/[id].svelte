@@ -16,7 +16,7 @@
 	$: isQ4Correct = $questions.filter((q) => q.id === 4).map((x) => x.is_correct)[0];
 	$: question = $questions.filter((q) => q.id === id)[0];
 
-	console.log({ isQ4Correct });
+	//console.log({ isQ4Correct });
 
 	const handleAnswer = async () => {
 		if (answer.toLocaleLowerCase() === question.answer.toLocaleLowerCase()) {
@@ -38,6 +38,9 @@
 	<p class="font-medium text-lg">Question {id}:</p>
 	<p>{question.text}</p>
 
+	{#if question.id === 1}
+		<span class="text-sm text-gray-600">Hint: 2 words (include the space)</span>
+	{/if}
 	{#if question.id === 2}
 		<img class="flex-1" src="/rebus.png" alt="redus puzzle" />
 	{/if}

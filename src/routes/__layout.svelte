@@ -17,13 +17,19 @@
 	let showCongratsModal = false;
 	let loaded = false;
 	//console.log($user);
-
+	let showAlreadyExists = false;
 	const congratsModalShown = persist(writable<boolean>(false), localStorage(), 'congratsmodal');
 
 	const handleContinue = async () => {
-		await createUser(newUserName);
-		//$persistentUserId = `${$user?.id}`;
-		showTeamModal = true;
+		await loadAllUsers();
+		newUserName = newUserName.trim();
+		if ($allUsers?.map((x) => x.name).includes(newUserName)) {
+			showAlreadyExists = true;
+			setTimeout(() => (showAlreadyExists = false), 3000);
+		} else {
+			await createUser(newUserName);
+			showTeamModal = true;
+		}
 	};
 
 	$: if ($questions.map((x) => x.is_correct).every(Boolean)) {
@@ -33,7 +39,7 @@
 
 	onMount(async () => {
 		await loadAllUsers();
-		console.log($allUsers);
+		//console.log($allUsers);
 		loaded = true;
 	});
 </script>
@@ -90,7 +96,11 @@
 									placeholder="user name"
 								/>
 							</label>
-
+							{#if showAlreadyExists}
+								<span class="text-sm text-center font-semibold py-2 text-red-400"
+									>Username already exists!</span
+								>
+							{/if}
 							<div class="flex justify-center mt-4">
 								<PrimaryButton on:click={handleContinue}>Continue</PrimaryButton>
 							</div>
