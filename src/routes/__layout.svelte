@@ -23,6 +23,7 @@
 	const handleContinue = async () => {
 		await loadAllUsers();
 		newUserName = newUserName.trim();
+		if (newUserName === 'undefined') return;
 		if ($allUsers?.map((x) => x.name).includes(newUserName)) {
 			showAlreadyExists = true;
 			setTimeout(() => (showAlreadyExists = false), 3000);
@@ -77,7 +78,7 @@
 		<!-- This example requires Tailwind CSS v2.0+ -->
 		<div class="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8">
 			{#if loaded}
-				{#if $user}
+				{#if $user?.name !== 'undefined' && $user}
 					<!-- Content goes here -->
 					<slot />
 				{:else}

@@ -9,6 +9,7 @@
 
 	// component imports
 	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
+	import { onMount } from 'svelte';
 
 	let id = parseInt($page.params.id);
 	let answer = '';
@@ -32,6 +33,12 @@
 			setTimeout(() => (wrongAnswer = false), 2500);
 		}
 	};
+
+	onMount(() => {
+		if (!$user?.show_questions) {
+			goto('/');
+		}
+	});
 </script>
 
 <div class="ml-px mt-4 pl-4 text-lg">
