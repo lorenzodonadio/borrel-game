@@ -19,7 +19,7 @@
 	//console.log({ isQ4Correct });
 
 	const handleAnswer = async () => {
-		if (answer.toLocaleLowerCase() === question.answer.toLocaleLowerCase()) {
+		if (answer.toLocaleLowerCase().trim() === question.answer.toLocaleLowerCase()) {
 			$questions = $questions.map((x) => (x.id === id ? { ...x, is_correct: true } : x));
 			//console.log('Correct Answer');
 			//check if all questions are correct, if so set it for every teammate!
@@ -42,6 +42,8 @@
 		<span class="text-sm text-gray-600">Hint: 2 words (include the space)</span>
 	{/if}
 	{#if question.id === 2}
+		<span class="text-sm text-gray-600">Hint: 5 words (include the spaces)</span>
+
 		<img class="flex-1" src="/rebus.png" alt="redus puzzle" />
 	{/if}
 	{#if question.id === 3}
@@ -66,6 +68,8 @@
 				Solve this puzzle and enter the name of this place</span
 			></a
 		>
+		<br />
+		<span class="text-sm text-gray-600">Hint: 1 word</span>
 	{/if}
 	{#if question.id === 5}
 		{#if isQ4Correct}
@@ -80,6 +84,8 @@
 					loading="lazy"
 				/>
 			</div>
+
+			<span class="text-sm text-gray-600">Hint: 2 words (include the space)</span>
 		{/if}
 	{/if}
 
