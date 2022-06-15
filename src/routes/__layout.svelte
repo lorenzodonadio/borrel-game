@@ -92,7 +92,7 @@
 							</label>
 
 							<div class="flex justify-center mt-4">
-								<PrimaryButton>Continue</PrimaryButton>
+								<PrimaryButton on:click={handleContinue}>Continue</PrimaryButton>
 							</div>
 						</form>
 					</div>
